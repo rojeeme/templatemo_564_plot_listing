@@ -1,20 +1,20 @@
 version: '3.8'
 
 services:
-  listing-service:
-    build: ./listing-service
+  listing-service: 
+    build:
+      context: ./listing-service
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
       - DB_HOST=db
       - DB_USER=user
       - DB_PASSWORD=password
-      - DB_NAME=listingdb
+      - DB_NAME=listingdb 
     depends_on:
       db:
         condition: service_healthy
-    command: >
-      sh -c "node scripts/init-schema.js && node server.js"
 
   db:
     image: postgres:14-alpine

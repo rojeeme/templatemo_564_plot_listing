@@ -8,13 +8,19 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install app dependencies
-RUN npm install
+RUN apk add --no-cache postgresql-client &amp;&amp; npm install
+
+# Copy the entrypoint script
+COPY docker-entrypoint.sh /usr/src/app/docker-entrypoint.sh
+RUN chmod +x /usr/src/app/docker-entrypoint.sh
 
 # Copy app source
 COPY . .
 
 # The service runs on port 3000
 EXPOSE 3000
+
+ENTRYPOINT ["/usr/src/app/docker-entrypoint.sh"]
 
 # Command to run the application
 CMD [ "node", "server.js" ]

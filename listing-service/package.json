@@ -1,0 +1,28 @@
+{
+  "name": "listing-service",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.22.0",
+    "pg": "^8.16.3",
+    "uuid": "^13.0.0"
+  },
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rojeeme/templatemo_564_plot_listing.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/rojeeme/templatemo_564_plot_listing/issues"
+  },
+  "homepage": "https://github.com/rojeeme/templatemo_564_plot_listing#readme"
+}

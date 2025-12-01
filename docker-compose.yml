@@ -43,8 +43,8 @@ services:
       - DB_USER=user
       - DB_PASSWORD=password
       - DB_NAME=listingdb
-    depends_on:
-      - listing-service # Depends on listing-service to ensure schema is created
+    depends_on: # Corrected indentation
+      - listing-service
 
   grafana:
     image: grafana/grafana:latest

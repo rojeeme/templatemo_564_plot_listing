@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install app dependencies
-RUN apk add --no-cache postgresql-client &amp;&amp; npm install
+RUN apk add --no-cache postgresql-client && npm install
 
 # Copy the entrypoint script
 COPY docker-entrypoint.sh /usr/src/app/docker-entrypoint.sh

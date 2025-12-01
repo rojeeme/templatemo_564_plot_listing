@@ -28,8 +28,22 @@ async function initSchema() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
+
+    // Create schema and table for analytics service
+    await client.query(`
+      CREATE SCHEMA IF NOT EXISTS analytics;
+
+      CREATE TABLE IF NOT EXISTS analytics.events (
+        id SERIAL PRIMARY KEY,
+        event_type VARCHAR(50) NOT NULL,
+        path VARCHAR(255),
+        element_id VARCHAR(100),
+        details JSONB,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
     
-    console.log('Listing schema initialized successfully');
+    console.log('Schemas for listing and analytics initialized successfully');
   } catch (error) {
     console.error('Schema initialization failed:', error);
   } finally {

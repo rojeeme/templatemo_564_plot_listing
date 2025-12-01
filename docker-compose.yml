@@ -1,76 +1,29 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres:13
-    container_name: postgres_db
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password123
-      POSTGRES_DB: plotlisting
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
-
   listing-service:
     build: ./listing-service
-    container_name: listing_service
     ports:
-      - "3001:3000" # Expose on local port 3001
       - "3000:3000"
     environment:
-      DB_HOST: postgres
-      DB_USER: admin
-      DB_PASSWORD: password123
-      DB_NAME: plotlisting
       - DB_HOST=db
       - DB_USER=user
       - DB_PASSWORD=password
       - DB_NAME=listingdb
     depends_on:
-      - postgres
-    restart: unless-stopped
       db:
         condition: service_healthy
     command: >
       sh -c "node scripts/init-schema.js && node server.js"
 
-  inquiry-service:
-    build: ./inquiry-service
-    container_name: inquiry_service
-    ports:
-      - "3002:3002"
   db:
     image: postgres:14-alpine
     environment:
-      DB_HOST: postgres
-      DB_USER: admin
-      DB_PASSWORD: password123
-      DB_NAME: plotlisting
-    depends_on:
-      - postgres
-    restart: unless-stopped
-
-  analytics-service:
-    build: ./analytics-service
-    container_name: analytics_service
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=listingdb
     ports:
-      - "3003:3003"
-    environment:
-      DB_HOST: postgres
-      DB_USER: admin
-      DB_PASSWORD: password123
-      DB_NAME: plotlisting
-    depends_on:
-      - postgres
-    restart: unless-stopped
-      - "5432:5432"
+      - "5433:5432" # Mapped to host port 5433 to avoid conflict
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -78,8 +31,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  # Add your frontend-service here once it's ready
 
 volumes:
   postgres_data:

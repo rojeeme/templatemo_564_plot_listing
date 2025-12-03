@@ -7,7 +7,7 @@ spec:
     - web
   routes:
     # This rule handles Metabase. It has a high priority and uses the stripprefix middleware.
-    - match: PathPrefix(`/metabase/`)
+    - match: PathPrefix(`/metabase`)
       kind: Rule
       priority: 15
       services:
@@ -17,7 +17,7 @@ spec:
         - name: metabase-stripprefix
 
     # This rule handles Grafana. It has a medium priority.
-    - match: PathPrefix(`/grafana/`)
+    - match: PathPrefix(`/grafana`)
       kind: Rule
       priority: 10
       services:

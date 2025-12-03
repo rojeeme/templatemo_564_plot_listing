@@ -34,8 +34,6 @@ spec:
           value: "postgres"
         - name: MB_DB_HOST
           value: "postgres-service"
-        - name: MB_SITE_URL
-          value: "http://16.171.140.122/metabase"
         - name: MB_DB_PORT
           value: "5432"
         - name: MB_DB_DBNAME
@@ -53,6 +51,8 @@ spec:
             secretKeyRef:
               name: db-credentials
               key: POSTGRES_PASSWORD
+        - name: MB_SITE_URL
+          value: "/metabase"
         volumeMounts:
         - name: metabase-storage
           mountPath: /metabase-data

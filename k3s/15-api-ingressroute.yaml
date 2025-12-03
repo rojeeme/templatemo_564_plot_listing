@@ -1,0 +1,23 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: api-ingressroute
+  namespace: default
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: PathPrefix(`/api/listings`)
+      kind: Rule
+      services:
+        - name: listing-service # Assumes this is your listing service
+          port: 3000
+      middlewares:
+        - name: api-stripprefix
+    - match: PathPrefix(`/api/analytics`)
+      kind: Rule
+      services:
+        - name: analytics-service # Assumes this is your analytics service
+          port: 3001
+      middlewares:
+        - name: api-stripprefix

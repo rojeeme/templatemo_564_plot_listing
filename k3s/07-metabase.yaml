@@ -52,7 +52,7 @@ spec:
               name: db-credentials
               key: POSTGRES_PASSWORD
         - name: MB_SITE_URL
-          value: "/metabase"
+          value: "http://16.171.140.122/metabase"
         volumeMounts:
         - name: metabase-storage
           mountPath: /metabase-data

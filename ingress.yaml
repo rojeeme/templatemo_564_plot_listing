@@ -11,14 +11,14 @@ spec:
         backend:
           service:
             name: frontend
-            port:
+            port: # if the frontend service uses port 6002, change this to 6002
               number: 80
       - path: /api/listings
         pathType: Prefix
         backend:
           service:
             name: listing-service
-            port:
+            port: # the listing service uses port 6000
               number: 80
       - path: /api/inquiries
         pathType: Prefix

@@ -22,13 +22,6 @@ spec:
             name: grafana-service
             port:
               number: 3000
-      - path: /metabase/
-        pathType: Prefix
-        backend:
-          service:
-            name: metabase-service
-            port:
-              number: 3000
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute

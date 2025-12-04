@@ -68,6 +68,10 @@ spec:
               value: "UTC"
             - name: MB_SITE_URL
               value: "http://16.171.140.122/metabase"
+            - name: MB_FORWARD_PROXY_CHECK_HEADERS
+              value: "true"
+            - name: MB_FORCE_HTTPS
+              value: "false"
           livenessProbe:
             httpGet:
               path: /api/health

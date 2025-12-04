@@ -103,6 +103,7 @@ spec:
   stripPrefix:
     prefixes:
       - /grafana
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -113,7 +114,6 @@ metadata:
     # attach the middleware we just created (namespaced)
     traefik.ingress.kubernetes.io/router.middlewares: "plot-listing-strip-grafana@kubernetescrd"
 spec:
-  ingressClassName: traefik
   ingressClassName: traefik
   rules:
     - http:

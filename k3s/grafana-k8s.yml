@@ -1,0 +1,126 @@
+# Grafana + PVC + datasource provisioning + Traefik middleware + Ingress
+# Apply into namespace: plot-listing
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-data
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasource
+data:
+  datasource.yml: |
+    apiVersion: 1
+    datasources:
+      - name: ListingDB
+        type: postgres
+        access: proxy
+        url: db-cluster:5432
+        database: listingdb
+        user: user
+        secureJsonData:
+          password: "password"
+        isDefault: true
+        version: 1
+        editable: true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:latest
+          env:
+            - name: GF_SECURITY_ADMIN_USER
+              value: "admin"
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              value: "admin"
+            - name: GF_ANALYTICS_ALLOWED
+              value: "false"
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: grafana-data
+              mountPath: /var/lib/grafana
+            - name: provisioning
+              mountPath: /etc/grafana/provisioning/datasources
+              readOnly: true
+      volumes:
+        - name: grafana-data
+          persistentVolumeClaim:
+            claimName: grafana-data
+        - name: provisioning
+          configMap:
+            name: grafana-datasource
+            items:
+              - key: datasource.yml
+                path: datasource.yml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+      name: http
+  selector:
+    app: grafana
+---
+# Traefik middleware to strip "/grafana" prefix so grafana can run at root
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-grafana
+spec:
+  stripPrefix:
+    prefixes:
+      - /grafana
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana-ingress
+  annotations:
+    kubernetes.io/ingress.class: "traefik"
+    # attach the middleware we just created (namespaced)
+    traefik.ingress.kubernetes.io/router.middlewares: "plot-listing-strip-grafana@kubernetescrd"
+spec:
+  ingressClassName: traefik
+  rules:
+    - http:
+        paths:
+          - path: /grafana
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 3000
+          - path: /grafana/
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 3000

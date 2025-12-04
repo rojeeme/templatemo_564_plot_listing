@@ -15,7 +15,7 @@ metadata:
   name: metabase-ingress-separate
   namespace: plot-listing
   annotations:
-    traefik.ingress.kubernetes.io/middleware: plot-listing-metabase-stripprefix@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: plot-listing-metabase-stripprefix@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:

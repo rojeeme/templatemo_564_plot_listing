@@ -7,11 +7,11 @@ metadata:
   namespace: plot-listing
 data:
   MB_DB_TYPE: "postgres"
-  MB_DB_DBNAME: "metabasedb"
+  MB_DB_DBNAME: "listingdb"
   MB_DB_HOST: "db-cluster"
   MB_DB_PORT: "5432"
   MB_DB_USER: "user"
-  MB_DB_PASSWORD: "password"
+  MB_DB_PASS: "password"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -63,7 +63,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: metabase-config
-                  key: MB_DB_PASSWORD
+                  key: MB_DB_PASS
           livenessProbe:
             httpGet:
               path: /api/health

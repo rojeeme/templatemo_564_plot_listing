@@ -29,12 +29,13 @@ metadata:
   namespace: plot-listing
   annotations:
     kubernetes.io/ingress.class: traefik
-    # Attach both middlewares to the routers. Traefik will only strip matching prefixes.
     traefik.ingress.kubernetes.io/router.middlewares: plot-listing-strip-listing@kubernetescrd,plot-listing-strip-analytics@kubernetescrd
+    traefik.ingress.kubernetes.io/router.priority: "10"
 spec:
   ingressClassName: traefik
   rules:
-    - http:
+    - host: "*"
+      http:
         paths:
           - path: /api/listing
             pathType: Prefix
